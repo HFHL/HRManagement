@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>编辑员工信息</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 600px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        input, button {
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>编辑员工信息</h1>
+    <form id="editForm">
+        <input type="hidden" id="id" name="id">
+        <input type="text" id="name" name="name" placeholder="姓名" required>
+        <input type="email" id="email" name="email" placeholder="邮箱" required>
+        <input type="text" id="passwd" name="passwd" placeholder="密码" required>
+        <input type="text" id="authority" name="authority" placeholder="权限" required>
+        <input type="text" id="sex" name="sex" placeholder="性别" required>
+        <input type="date" id="birthday" name="birthday" placeholder="生日" required>
+        <input type="text" id="department" name="department" placeholder="部门" required>
+        <input type="text" id="job" name="job" placeholder="职务" required>
+        <input type="text" id="eduLevel" name="eduLevel" placeholder="受教育程度" required>
+        <input type="text" id="specialty" name="specialty" placeholder="专业" required>
+        <input type="text" id="address" name="address" placeholder="家庭住址" required>
+        <input type="text" id="tel" name="tel" placeholder="联系电话" required>
+        <input type="text" id="state" name="state" placeholder="当前状态" required>
+        <input type="text" id="remark" name="remark" placeholder="备注" required>
+        <button type="button" onclick="updateEmployee()">保存</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const employeeId = urlParams.get('id');
+        fetch(`/employee/${employeeId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('id').value = data.id;
+                document.getElementById('name').value = data.name;
+                document.getElementById('email').value = data.email;
+                document.getElementById('passwd').value = data.passwd;
+                document.getElementById('authority').value = data.authority;
+                document.getElementById('sex').value = data.sex;
+                document.getElementById('birthday').value = data.birthday;
+                document.getElementById('department').value = data.department;
+                document.getElementById('job').value = data.job;
+                document.getElementById('eduLevel').value = data.eduLevel;
+                document.getElementById('specialty').value = data.specialty;
+                document.getElementById('address').value = data.address;
+                document.getElementById('tel').value = data.tel;
+                document.getElementById('state').value = data.state;
+                document.getElementById('remark').value = data.remark;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
+    function updateEmployee() {
+        const form = document.getElementById('editForm');
+        const formData = new FormData(form);
+        const jsonData = {};
+        formData.forEach((value, key) => { jsonData[key] = value });
+
+        fetch(`/employee/${jsonData.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonData)
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('更新成功');
+                    window.location.href = '/employee-search.html';
+                } else {
+                    alert('更新失败');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>新增员工</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 500px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        input, button {
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>新增员工</h1>
+    <form id="personForm">
+        <input type="text" name="name" placeholder="姓名" required>
+        <input type="email" name="email" placeholder="邮箱" required>
+        <input type="password" name="passwd" placeholder="密码" required>
+        <input type="text" name="authority" placeholder="权限" required>
+        <input type="text" name="sex" placeholder="性别" required>
+        <input type="date" name="birthday" placeholder="生日" required>
+        <input type="text" name="department" placeholder="部门" required>
+        <input type="text" name="job" placeholder="职务" required>
+        <input type="text" name="eduLevel" placeholder="受教育程度" required>
+        <input type="text" name="specialty" placeholder="专业" required>
+        <input type="text" name="address" placeholder="家庭住址" required>
+        <input type="text" name="tel" placeholder="联系电话" required>
+        <input type="text" name="state" placeholder="当前状态" required>
+        <input type="text" name="remark" placeholder="备注" required>
+        <button type="button" onclick="submitForm()">提交</button>
+    </form>
+</div>
+<script>
+    function submitForm() {
+        const form = document.getElementById('personForm');
+        const formData = new FormData(form);
+        const jsonData = {};
+        formData.forEach((value, key) => { jsonData[key] = value });
+
+        fetch('/persons', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonData)
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    alert('Error: ' + response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+</html>

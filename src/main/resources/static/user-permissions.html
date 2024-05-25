@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>用户权限管理</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 12px;
+      width: 80%;
+      max-width: 800px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid white;
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    button {
+      padding: 8px;
+      border-radius: 4px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>用户权限管理</h1>
+  <table id="userTable">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>用户名</th>
+      <th>权限</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 用户列表将在这里显示 -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function loadUsers() {
+    fetch('/user-permissions/users')
+            .then(response => response.json())
+            .then(data => {
+              const tableBody = document.querySelector('#userTable tbody');
+              tableBody.innerHTML = '';
+              data.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.authority}</td>
+                    <td>
+                        <button onclick="toggleAuthority(${user.id}, '${user.authority}')">切换权限</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+              });
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+  }
+
+  function toggleAuthority(id, currentAuthority) {
+    const newAuthority = currentAuthority === 'admin' ? 'user' : 'admin';
+    fetch(`/user-permissions/user/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ authority: newAuthority })
+    })
+            .then(response => response.json())
+            .then(data => {
+              alert('用户权限已更新');
+              loadUsers();
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+  }
+
+  document.addEventListener('DOMContentLoaded', loadUsers);
+</script>
+</body>
+</html>

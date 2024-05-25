@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>人事管理系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 500px;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            margin: 15px 0;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            padding: 12px 24px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: inline-block;
+            width: 80%;  /* Ensures buttons are the same width */
+            text-align: center;  /* Aligns text within the buttons */
+            transition: background-color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>人事管理系统</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#" onclick="navigateTo('/new-person.html')">新员工资料输入</a></li>
+            <li><a href="#" onclick="navigateTo('/personnel-changes.html')">人事变动记录</a></li>
+            <li><a href="#" onclick="navigateTo('/employee-search.html')">员工信息查询和修改</a></li>
+            <li><a href="#" onclick="navigateTo('/user-permissions.html')">用户权限管理</a></li>
+            <li><a href="/login.html">登录</a></li>
+        </ul>
+    </nav>
+</div>
+<script>
+    function checkLogin() {
+        return sessionStorage.getItem('loggedIn') === 'true';
+    }
+
+    function navigateTo(url) {
+        if (checkLogin()) {
+            window.location.href = url;
+        } else {
+            alert('请先登录');
+            window.location.href = '/login.html';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (checkLogin()) {
+            // 已登录状态下的处理（如显示用户信息等）
+        }
+    });
+</script>
+</body>
+</html>

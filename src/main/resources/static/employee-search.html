@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>员工信息查询和修改</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 600px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        input, button {
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid white;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>员工信息查询和修改</h1>
+    <form id="searchForm">
+        <input type="text" name="search" placeholder="输入员工姓名或ID进行查询">
+        <button type="button" onclick="searchEmployee()">查询</button>
+    </form>
+    <div id="result">
+        <table id="employeeTable">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>姓名</th>
+                <th>邮箱</th>
+                <th>部门</th>
+                <th>职务</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 查询结果将在这里显示 -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function searchEmployee() {
+        const form = document.getElementById('searchForm');
+        const formData = new FormData(form);
+        const searchQuery = formData.get('search');
+        fetch(`/employee/search?query=${searchQuery}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#employeeTable tbody');
+                tableBody.innerHTML = '';
+                data.forEach(employee => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    <td>${employee.id}</td>
+                    <td>${employee.name}</td>
+                    <td>${employee.email}</td>
+                    <td>${employee.department}</td>
+                    <td>${employee.job}</td>
+                    <td>
+                        <button onclick="editEmployee(${employee.id})">编辑</button>
+                        <button onclick="deleteEmployee(${employee.id})">删除</button>
+                    </td>
+                `;
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function editEmployee(id) {
+        window.location.href = `/edit-employee.html?id=${id}`;
+    }
+
+    function deleteEmployee(id) {
+        if (confirm('确定要删除此员工吗？')) {
+            fetch(`/employee/${id}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        searchEmployee();
+                    } else {
+                        alert('删除失败');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }
+</script>
+</body>
+</html>
