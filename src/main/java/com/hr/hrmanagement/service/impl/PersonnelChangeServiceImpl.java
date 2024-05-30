@@ -41,4 +41,7 @@ public class PersonnelChangeServiceImpl implements PersonnelChangeService {
     public void deleteRecord(int id) {
         personnelChangeDao.deleteById(id);
     }
+
+
+
 }

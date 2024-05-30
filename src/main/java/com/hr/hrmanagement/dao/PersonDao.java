@@ -6,7 +6,7 @@ import java.util.List;
 public interface PersonDao {
     List<Person> findAll();
     Person findById(int id);
-    void save(Person person);
+    Person save(Person person);
     void update(Person person);
     void deleteById(int id);
     List<Person> search(String query); // 添加搜索方法

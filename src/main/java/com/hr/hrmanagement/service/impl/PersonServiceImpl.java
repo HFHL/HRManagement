@@ -5,20 +5,18 @@ import com.hr.hrmanagement.entity.Person;
 import com.hr.hrmanagement.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional
 public class PersonServiceImpl implements PersonService {
 
     @Autowired
     private PersonDao personDao;
 
     @Override
-    public List<Person> getAllPersons() {
-        return personDao.findAll();
+    public List<Person> searchPersons(String query) {
+        return personDao.search(query);
     }
 
     @Override
@@ -28,8 +26,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person savePerson(Person person) {
-        personDao.save(person);
-        return person;
+        return personDao.save(person);
     }
 
     @Override
@@ -43,12 +40,13 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<Person> searchPersons(String query) {
-        return personDao.search(query);
-    }
-
-    @Override
     public Person getPersonByName(String name) {
         return personDao.findByName(name);
     }
+
+    @Override
+    public List<Person> getAllPersons() {
+        return personDao.findAll();
+    }
+
 }

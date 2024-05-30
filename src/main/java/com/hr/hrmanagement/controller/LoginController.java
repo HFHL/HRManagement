@@ -23,12 +23,17 @@ public class LoginController {
 
         Person person = personService.getPersonByName(username);
         Map<String, Object> response = new HashMap<>();
-        if (person != null && person.getPasswd().equals(password) && "admin".equals(person.getAuthority())) {
+        if (person != null && person.getPasswd().equals(password)) {
             session.setAttribute("user", person);
             response.put("success", true);
+            if ("admin".equals(person.getAuthority())) {
+                response.put("redirectUrl", "/admin-home.html");
+            } else {
+                response.put("redirectUrl", "/user-home.html");
+            }
         } else {
             response.put("success", false);
-            response.put("message", "用户名或密码错误，或无管理员权限");
+            response.put("message", "用户名或密码错误");
         }
         return response;
     }

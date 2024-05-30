@@ -133,7 +133,8 @@
                     if (response.ok) {
                         searchEmployee();
                     } else {
-                        alert('删除失败');
+                        console.log(response.text())
+                        alert('删除失败'+ response.text() );
                     }
                 })
                 .catch(error => {

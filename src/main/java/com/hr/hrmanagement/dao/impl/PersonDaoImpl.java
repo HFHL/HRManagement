@@ -28,9 +28,10 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     @Override
-    public void save(Person person) {
+    public Person save(Person person) {
         String sql = "INSERT INTO person (PASSWD, AUTHORITY, NAME, SEX, BIRTHDAY, DEPARTMENT, JOB, EDU_LEVEL, SPECIALTY, ADDRESS, TEL, EMAIL, STATE, REMARK) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, person.getPasswd(), person.getAuthority(), person.getName(), person.getSex(), person.getBirthday(), person.getDepartment(), person.getJob(), person.getEduLevel(), person.getSpecialty(), person.getAddress(), person.getTel(), person.getEmail(), person.getState(), person.getRemark());
+        return person;
     }
 
     @Override

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>管理员首页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 600px;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            margin: 15px 0;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            padding: 12px 24px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: inline-block;
+            width: 80%;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+        .info {
+            margin: 20px 0;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>管理员首页</h1>
+    </header>
+    <div class="info">
+        <p id="username">姓名：加载中...</p>
+        <p id="department">部门：加载中...</p>
+        <p id="job">职务：加载中...</p>
+        <p id="email">邮箱：加载中...</p>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="/new-person.html">新员工资料输入</a></li>
+            <li><a href="/personnel-changes.html">人事变动记录</a></li>
+            <li><a href="/employee-search.html">员工信息查询和修改</a></li>
+            <li><a href="/user-permissions.html">用户权限管理</a></li>
+            <li><a href="/help.html">帮助</a></li>
+            <li><a href="/log.html">操作日志</a></li>
+            <li><a href="#" onclick="logout()">退出登录</a></li>
+        </ul>
+    </nav>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        fetch('/user/info')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('username').textContent = '姓名：' + data.name;
+                document.getElementById('department').textContent = '部门：' + data.department;
+                document.getElementById('job').textContent = '职务：' + data.job;
+                document.getElementById('email').textContent = '邮箱：' + data.email;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
+    function logout() {
+        fetch('/login/logout')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/';
+                } else {
+                    alert('退出失败');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+</html>

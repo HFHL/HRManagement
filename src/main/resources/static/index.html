@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>人事管理系统</title>
+    <title>登录</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,64 +23,61 @@
             width: 80%;
             max-width: 500px;
         }
-        nav ul {
-            list-style-type: none;
-            padding: 0;
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
-        nav ul li {
-            margin: 15px 0;
+        input, button {
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
         }
-        nav ul li a {
-            text-decoration: none;
+        button {
+            background-color: #4CAF50;
             color: white;
-            font-size: 18px;
-            padding: 12px 24px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            display: inline-block;
-            width: 80%;  /* Ensures buttons are the same width */
-            text-align: center;  /* Aligns text within the buttons */
-            transition: background-color 0.3s;
+            cursor: pointer;
         }
-        nav ul li a:hover {
-            background-color: rgba(255, 255, 255, 0.4);
+        button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <header>
-        <h1>人事管理系统</h1>
-    </header>
-    <nav>
-        <ul>
-            <li><a href="#" onclick="navigateTo('/new-person.html')">新员工资料输入</a></li>
-            <li><a href="#" onclick="navigateTo('/personnel-changes.html')">人事变动记录</a></li>
-            <li><a href="#" onclick="navigateTo('/employee-search.html')">员工信息查询和修改</a></li>
-            <li><a href="#" onclick="navigateTo('/user-permissions.html')">用户权限管理</a></li>
-            <li><a href="/login.html">登录</a></li>
-        </ul>
-    </nav>
+    <h1>登录</h1>
+    <form id="loginForm">
+        <input type="text" name="username" placeholder="用户名" required>
+        <input type="password" name="password" placeholder="密码" required>
+        <button type="button" onclick="submitForm()">登录</button>
+    </form>
 </div>
 <script>
-    function checkLogin() {
-        return sessionStorage.getItem('loggedIn') === 'true';
-    }
+    function submitForm() {
+        const form = document.getElementById('loginForm');
+        const formData = new FormData(form);
+        const jsonData = {};
+        formData.forEach((value, key) => { jsonData[key] = value });
 
-    function navigateTo(url) {
-        if (checkLogin()) {
-            window.location.href = url;
-        } else {
-            alert('请先登录');
-            window.location.href = '/login.html';
-        }
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirectUrl;
+                } else {
+                    alert('登录失败: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        if (checkLogin()) {
-            // 已登录状态下的处理（如显示用户信息等）
-        }
-    });
 </script>
 </body>
 </html>
